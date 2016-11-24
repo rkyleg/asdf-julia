@@ -8,14 +8,14 @@ else version_trim=$ASDF_INSTALL_VERSION;
 fi
 url="https://julialang.s3.amazonaws.com/bin/linux/x64/$version_trim/julia-$ASDF_INSTALL_VERSION-linux-x86_64.tar.gz"
 tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-echo $tmp_download_dir
 curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
-julia_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$tmp_download_dir")"
+output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$tmp_download_dir")" 
+julia_dir="$(echo $output_dir | cut -f1 -d"/")"
+echo $julia_dir
 echo "Do you want to install the desktop entry for Julia (y/n)?"
 read installdesktop
-if [ $installdesktop -eq 'y'];
-    then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+if [ $installdesktop == "y" ];
+    then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 fi
-mv $julia_dir $ASDF_INSTALL_PATH
+cp -r "$tmp_download_dir/$julia_dir" $ASDF_INSTALL_PATH
 rm -rf $tmp_download_dir
-rm -rf $julia_dir
