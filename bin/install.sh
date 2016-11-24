@@ -1,6 +1,6 @@
 # install_julia $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
-ASDF_INSTALL_VERSION="0.5.0"
-ASDF_INSTALL_PATH=$PWD
+# ASDF_INSTALL_VERSION="0.5.0"
+# ASDF_INSTALL_PATH=$PWD
 version_zero_check=${ASDF_INSTALL_VERSION##*.}
 if [ $version_zero_check -eq 0 ];
     then version_trim=${ASDF_INSTALL_VERSION%.0};
