@@ -1,0 +1,15 @@
+image: ruby:2.1
+
+before_script:
+  - git clone https://github.com/asdf-vm/asdf.git asdf
+  - . asdf/asdf.sh
+
+stages:
+  - test
+
+job1:
+  stage: test
+  script:
+    - asdf plugin-test julia https://github.com/rkyleg/asdf-julia.git 'julia --version'
+  only:
+    - master
