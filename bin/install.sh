@@ -1,5 +1,6 @@
 # install_julia $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
 ASDF_INSTALL_VERSION="0.5.0"
+ASDF_INSTALL_PATH=$PWD
 version_zero_check=${ASDF_INSTALL_VERSION##*.}
 if [ $version_zero_check -eq 0 ];
     then version_trim=${ASDF_INSTALL_VERSION%.0};
@@ -9,5 +10,12 @@ url="https://julialang.s3.amazonaws.com/bin/linux/x64/$version_trim/julia-$ASDF_
 tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 echo $tmp_download_dir
 curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
-tmp_file="$(tar -xvf "$tmp_download_dir/julia.tar.gz")"
-mv tmp_file $ASDF_INSTALL_PATH
+julia_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$tmp_download_dir")"
+echo "Do you want to install the desktop entry for Julia (y/n)?"
+read installdesktop
+if [ $installdesktop -eq 'y'];
+    then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+fi
+mv $julia_dir $ASDF_INSTALL_PATH
+rm -rf $tmp_download_dir
+rm -rf $julia_dir
