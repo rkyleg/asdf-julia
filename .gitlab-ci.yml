@@ -7,9 +7,6 @@ before_script:
 stages:
   - test
 
-variables:
-  -TRAVIS_CI_TEST=true
-  
 job1:
   stage: test
   script:
