@@ -3,6 +3,8 @@ script: asdf plugin-test julia https://github.com/rkyleg/asdf-julia.git 'julia -
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git asdf
   - . asdf/asdf.sh
+env:
+  - CI_SERVER=yes
 os:
   - linux
   - osx

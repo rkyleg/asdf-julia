@@ -18,6 +18,9 @@ read installdesktop
 # if [ $installdesktop == "y" ];
 #     then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 # fi
-cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+if [ -z "$CI_SERVER" ];
+    then cp $tmp_download_dir/${julia_dir%/}/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+fi
+
 cp -r "$tmp_download_dir/$julia_dir" $ASDF_INSTALL_PATH
 rm -rf $tmp_download_dir
