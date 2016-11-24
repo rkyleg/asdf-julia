@@ -1,5 +1,22 @@
-# install_julia $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
-ASDF_INSTALL_VERSION="0.5.0"
-url="https://julialang.s3.amazonaws.com/bin/linux/x64/0.5/julia-$ASDF_INSTALL_VERSION-linux-x86_64.tar.gz"
-echo ASDF_INSTALL_VERSION
-echo url
+#!/usr/bin/env bash
+
+versions_list=(
+  0.5.0
+  0.4.7
+  0.4.6
+  0.4.5
+  0.4.4
+  0.4.3
+  0.4.2
+  0.4.1
+  0.4.0
+)
+
+versions=""
+
+for version in "${versions_list[@]}"
+do
+  versions="${versions} ${version}"
+done
+
+echo $versions
