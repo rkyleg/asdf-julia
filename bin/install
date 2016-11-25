@@ -10,6 +10,7 @@ fi
 url="https://julialang.s3.amazonaws.com/bin/linux/x64/$version_trim/julia-$ASDF_INSTALL_VERSION-linux-x86_64.tar.gz"
 tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
+mkdir $ASDF_INSTALL_PATH/julia
 output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$ASDF_INSTALL_PATH/julia")" 
 julia_dir="$tmp_download_dir/julia"
 if [[ -z "$CI_SERVER" ]]; then
