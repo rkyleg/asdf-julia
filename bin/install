@@ -19,7 +19,7 @@ if [ -z "$CI_SERVER" ];
     echo "Do you want to install the desktop entry for Julia (y/n)?"
     read installdesktop
     if [ $installdesktop == "y" ];
-        cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
+        then cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
     fi
     # cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 fi
