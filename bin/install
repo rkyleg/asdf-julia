@@ -15,22 +15,22 @@ install_julia(){
     local version_trim=${version%.*}
     local url="https://julialang.s3.amazonaws.com/bin/linux/x64/$version_trim/julia-${version}-linux-x86_64.tar.gz"
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    curl ${url} --create-dirs -so "$tmp_download_dir/julia.tar.gz"
-    local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "${install_path}")" 
-    local install_dir="$(echo $output_dir | cut -f1 -d"/")"
+    curl ${url} --create-dirs -so "${tmp_download_dir}/julia.tar.gz"
+    local output_dir="$(tar -xvf "${tmp_download_dir}/julia.tar.gz" -C "${install_path}")" 
+    local install_dir="$(echo ${output_dir} | cut -f1 -d"/")"
     local julia_dir=${install_dir%-*}
-    mv ${install_path}/$install_dir ${install_path}/$julia_dir
+    mv ${install_path}/${install_dir} ${install_path}/${julia_dir}
 
     if [[ -z "$CI_SERVER" ]]; then
         echo "Do you want to install the desktop entry for Julia (y/n)?"
         read installdesktop
-        if [ $installdesktop == "y" ]; then
-            cp ${install_path}/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+        if [ ${installdesktop} == "y" ]; then
+            cp ${install_path}/${julia_dir}/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
         fi
         # cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
     fi
 
     # cp -r $tmp_download_dir/julia $ASDF_INSTALL_PATH
-    #rm -rf $tmp_download_dir
+    rm -rf ${tmp_download_dir}
 }
 install_julia $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
