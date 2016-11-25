@@ -12,15 +12,17 @@ tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
 output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$ASDF_INSTALL_PATH")" 
 julia_dir="$(echo $output_dir | cut -f1 -d"/")"
-# echo $julia_dir
+julia_dir=${julia_dir%-*}
+echo $julia_dir
 # echo "Do you want to install the desktop entry for Julia (y/n)?"
 # read installdesktop
 # if [ $installdesktop == "y" ];
 #     then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 # fi
 if [ -z "$CI_SERVER" ];
-    then cp $tmp_download_dir/${julia_dir%/}/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+    then cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
 fi
 
 # cp -r "$tmp_download_dir/$julia_dir" $ASDF_INSTALL_PATH
+echo -n "$julia_dir/bin" >> list-bin-paths
 rm -rf $tmp_download_dir
