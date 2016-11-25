@@ -15,11 +15,11 @@ julia_dir="$(echo $output_dir | cut -f1 -d"/")"
 julia_dir=${julia_dir%-*}
 echo $julia_dir
 echo $ASDF_INSTALL_PATH
-if [ -z "$CI_SERVER" ];
-    then echo "Do you want to install the desktop entry for Julia (y/n)?"
-    && read installdesktop
-    if [ $installdesktop == "y" ];
-        then cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
+if [[ -z "$CI_SERVER" ]]; then
+    echo "Do you want to install the desktop entry for Julia (y/n)?"
+    read installdesktop
+    if [ $installdesktop == "y" ]; then
+        cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
     fi
     # cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 fi
