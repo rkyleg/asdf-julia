@@ -14,13 +14,14 @@ output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$ASDF_INSTALL_PATH")
 julia_dir="$(echo $output_dir | cut -f1 -d"/")"
 julia_dir=${julia_dir%-*}
 echo $julia_dir
-# echo "Do you want to install the desktop entry for Julia (y/n)?"
-# read installdesktop
-# if [ $installdesktop == "y" ];
-#     then cp $tmp_download_dir/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
-# fi
+echo $ASDF_INSTALL_PATH
 if [ -z "$CI_SERVER" ];
-    then cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
+    echo "Do you want to install the desktop entry for Julia (y/n)?"
+    read installdesktop
+    if [ $installdesktop == "y" ];
+        cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
+    fi
+    # cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
 fi
 
 # cp -r "$tmp_download_dir/$julia_dir" $ASDF_INSTALL_PATH
