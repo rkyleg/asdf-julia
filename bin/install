@@ -15,6 +15,8 @@ output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$ASDF_INSTALL_PATH")
 install_dir="$(echo $output_dir | cut -f1 -d"/")"
 julia_dir=${install_dir%-*}
 echo $ASDF_INSTALL_PATH
+echo $install_dir
+echo $julia_dir
 mv $ASDF_INSTALL_PATH/$install_dir $ASDF_INSTALL_PATH/$julia_dir
 if [[ -z "$CI_SERVER" ]]; then
     echo "Do you want to install the desktop entry for Julia (y/n)?"
