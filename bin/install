@@ -25,5 +25,5 @@ if [[ -z "$CI_SERVER" ]]; then
 fi
 
 # cp -r "$tmp_download_dir/$julia_dir" $ASDF_INSTALL_PATH
-echo -n "$julia_dir/bin" >> list-bin-paths
+
 rm -rf $tmp_download_dir
