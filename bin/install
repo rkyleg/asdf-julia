@@ -14,9 +14,9 @@ install_julia(){
     if [[ "$(uname)" == "Darwin" ]]; then 
         local url="https://julialang.s3.amazonaws.com/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
-        hdiutil mount "$tmp_download_dir/julia-$version.dmg" 
-        cp -R "/Volumes/Julia-$version/Julia-$version/Contents/MacOS" "$install_dir/julia/bin"
-        hdiutil mount "$tmp_download_dir/julia.dmg"
+        hdiutil mount "$tmp_download_dir/julia.dmg" 
+        cp -R "/Volumes/Julia/Julia-$version/Contents/MacOS" "$install_dir/julia/bin"
+        hdiutil unmount "$tmp_download_dir/julia.dmg"
         exit;
     else local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     fi 
