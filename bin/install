@@ -16,7 +16,7 @@ install_julia(){
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
         hdiutil mount "$tmp_download_dir/julia.dmg"
         mkdir -p "$install_dir/julia/bin"
-        cp -R "/Volumes/Julia/Julia-$version.app/Contents/MacOS" "$install_dir/julia/bin"
+        cp -R "/Volumes/Julia/Julia-$version.app/Contents/MacOS" "$install_path/julia/bin"
         hdiutil unmount "/Volumes/Julia"
         exit;
     else local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
