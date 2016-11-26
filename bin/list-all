@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 curl -s 'https://api.github.com/repos/JuliaLang/julia/releases' | 
-python3 -c " 
+python -c " 
 import sys, json
 file=json.load(sys.stdin)
 for obj in file:
