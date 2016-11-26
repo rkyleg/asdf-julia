@@ -15,7 +15,7 @@ install_julia(){
         local url="https://julialang.s3.amazonaws.com/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
         hdiutil mount "$tmp_download_dir/julia.dmg"
-        mkdir -p "$install_dir/julia/bin"
+        mkdir -p "$install_path/julia/bin"
         cp -R "/Volumes/Julia/Julia-$version.app/Contents/MacOS" "$install_path/julia/bin"
         hdiutil unmount "/Volumes/Julia"
         exit;
