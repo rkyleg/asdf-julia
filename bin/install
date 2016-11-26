@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
-# install_julia $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
-# ASDF_INSTALL_VERSION="0.5.0"
-# ASDF_INSTALL_PATH=$PWD
-# version_zero_check=${ASDF_INSTALL_VERSION##*.}
-# if [ $version_zero_check -eq 0 ];
-#     then version_trim=${ASDF_INSTALL_VERSION%.0};
-# else version_trim=$ASDF_INSTALL_VERSION;
-# fi
+
+# https://s3.amazonaws.com/julialang/bin/osx/x64/0.5/julia-0.5.0-osx10.7+.dmg
+
 install_julia(){
     local install_type=$1
     local version=$2
@@ -17,15 +12,19 @@ install_julia(){
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
     curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
     if [[ "$(uname)" == "Darwin" ]]; then 
-        tar -xvf "$tmp_download_dir/julia.tar.gz" -C $install_path
-        local output_dir="$(tar -tf "$tmp_download_dir/julia.tar.gz" | head -n1)" 
+        local url="https://julialang.s3.amazonaws.com/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
+        curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
+        hdiutil mount "$tmp_download_dir/julia.dmg" 
+        cp -R "/Volumes/Julia-$version/Julia-$version/Contents/MacOS" $install_dir
+        hdiutil mount "$tmp_download_dir/julia.dmg"
+        exit;
     else local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     fi 
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
     local julia_dir=${install_dir%-*}
     mv $install_path/$install_dir $install_path/$julia_dir
 
-    if [[ -z "$CI_SERVER" ]]; then
+    if [[ -z "$CI_SERVER" && "$(uname)" == "Linux"]]; then
         echo "Do you want to install the desktop entry for Julia (y/n)?"
         read installdesktop
         if [ ${installdesktop} == "y" ]; then
