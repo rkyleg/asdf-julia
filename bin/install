@@ -10,18 +10,18 @@ install_julia(){
     local version_trim=${version%.*}
     local url="https://julialang.s3.amazonaws.com/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"
     if [[ "$(uname)" == "Darwin" ]]; then 
         local url="https://julialang.s3.amazonaws.com/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
         hdiutil mount "$tmp_download_dir/julia.dmg"
         mkdir -p "$install_path/julia/bin"
-        cp -R "/Volumes/Julia-$version/Julia-$version.app/Contents/MacOS" "$install_path/julia/bin"
+        cp -R "/Volumes/Julia-$version/Julia-$version_trim.app/Contents/MacOS/" "$install_path/julia/bin"
         mv -f "$install_path/julia/bin/Julia" "$install_path/julia/bin/julia"
         hdiutil unmount "/Volumes/Julia"
         exit;
     else local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     fi 
+    curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"    
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
     local julia_dir=${install_dir%-*}
     mv $install_path/$install_dir $install_path/$julia_dir
