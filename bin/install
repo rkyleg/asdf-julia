@@ -17,7 +17,7 @@ install_julia(){
         hdiutil mount "$tmp_download_dir/julia.dmg"
         mkdir -p "$install_path/julia/bin"
         cp -R "/Volumes/Julia/Julia-$version.app/Contents/MacOS" "$install_path/julia/bin"
-        mv "$install_path/julia/bin/Julia" "$install_path/julia/bin/julia"
+        mv -f "$install_path/julia/bin/Julia" "$install_path/julia/bin/julia"
         hdiutil unmount "/Volumes/Julia"
         exit;
     else local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
