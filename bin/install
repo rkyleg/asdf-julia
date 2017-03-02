@@ -9,7 +9,7 @@ install_julia(){
 
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    
+
     if [[ "$(uname)" == "Darwin" ]]; then 
         if [[ "$CI_SERVER" = "yes" ]]; then
             local mountpath="/Volumes/Julia";
@@ -44,5 +44,6 @@ install_julia(){
 
     # cp -r $tmp_download_dir/julia $ASDF_INSTALL_PATH
     rm -rf $tmp_download_dir
+    chmod a+x $install_path/$julia_dir
 }
 install_julia $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
