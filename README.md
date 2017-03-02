@@ -21,6 +21,9 @@ The list-all script uses python to import and parse the list of releases from gi
 If this causes problems for anyone, please let me know. I am making the assumption that python is
 installed on everyone's machine.
 
+Also, any pre-release or rc versions of julia are excluded as these didn't seem to be uploaded to their 
+Amazon S3 bucket. 
+
 On Linux:
 There is an option to install the desktop entry at the end of the install process, 
 choose 'y' if you want to do this or 'n' if you do not. 

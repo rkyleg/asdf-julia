@@ -5,6 +5,7 @@ before_script:
   - . asdf/asdf.sh
 env:
   - CI_SERVER=yes
+dist: trusty
 os:
   - linux
   - osx
