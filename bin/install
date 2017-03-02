@@ -10,7 +10,7 @@ install_julia(){
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
     if [[ "$(uname)" == "Darwin" ]]; then 
-        if [ "$CI_SERVER" = "yes"]; then
+        if [[ "$CI_SERVER" = "yes"]]; then
             local mountpath="/Volumes/Julia";
             local appname="/Julia.app";
         else
