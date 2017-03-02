@@ -4,5 +4,7 @@ python -c "
 import sys, json
 file=json.load(sys.stdin)
 for obj in file:
+    if '-' in obj['tag_name'].strip('v'):
+        continue
     print(obj['tag_name'].strip('v'))
 "
