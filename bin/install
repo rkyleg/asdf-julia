@@ -11,13 +11,15 @@ install_julia(){
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 
     if [[ "$(uname)" == "Darwin" ]]; then 
-        if [[ "$CI_SERVER" = "yes" ]]; then
-            local mountpath="/Volumes/Julia";
-            local appname="Julia.app";
-        else
-            local mountpath="/Volumes/Julia-$version";
-            local appname="/Julia-$version_trim.app";
-        fi
+        # if [[ "$CI_SERVER" = "yes" ]]; then
+        #     local mountpath="/Volumes/Julia";
+        #     local appname="Julia.app";
+        # else
+        #     local mountpath="/Volumes/Julia-$version";
+        #     local appname="/Julia-$version_trim.app";
+        # fi
+        local mountpath="/Volumes/Julia-$version";
+        local appname="/Julia-$version_trim.app";
         local url="https://s3.amazonaws.com/julialang/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
         hdiutil mount "$tmp_download_dir/julia.dmg"
