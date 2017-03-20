@@ -4,7 +4,7 @@ before_script:
   - git clone https://github.com/asdf-vm/asdf.git asdf --branch v0.2.1
   - . asdf/asdf.sh
 env:
-  - CI_SERVER=yes
+  - CI_SERVER=no
 dist: trusty
 osx_image: xcode8.2
 before_install:
