@@ -19,7 +19,8 @@ install_julia(){
             local appname="/Julia-$version_trim.app";
         fi
         local url="https://s3.amazonaws.com/julialang/bin/osx/x64/$version_trim/julia-$version-osx10.7+.dmg"
-        curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
+        # curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
+        wget -x $url "tmp_download_dir/julia.dmg"
         hdiutil mount "$tmp_download_dir/julia.dmg"
         cp -R "$mountpath/$appname/Contents/Resources/julia" $install_path
         hdiutil unmount $mountpath
