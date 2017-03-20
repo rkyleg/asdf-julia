@@ -7,9 +7,6 @@ env:
   - CI_SERVER=no
 dist: trusty
 osx_image: xcode8.2
-before_install:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update          ; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install curl; fi
 os:
   - linux
   - osx

@@ -3,6 +3,7 @@ curl -s 'https://api.github.com/repos/JuliaLang/julia/releases' |
 python -c " 
 import sys, json
 file=json.load(sys.stdin)
+print(file[0]['tag_name'])
 for obj in file:
     if '-' in obj['tag_name'].strip('v'):
         continue
