@@ -13,7 +13,7 @@ install_julia(){
     if [[ "$(uname)" == "Darwin" ]]; then 
         if [[ "$CI_SERVER" = "yes" ]]; then
             local mountpath="/Volumes/Julia";
-            local appname="/Julia.app";
+            local appname="Julia.app";
         else
             local mountpath="/Volumes/Julia-$version";
             local appname="/Julia-$version_trim.app";
