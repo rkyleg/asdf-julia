@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-curl -s 'https://api.github.com/repos/JuliaLang/julia/releases' | 
-python -c " 
-import sys, json
-file=json.load(sys.stdin)
-for obj in file:
-    if '-' in obj['tag_name'].strip('v'):
-        continue
-    print(obj['tag_name'].strip('v'))
-"
+curl -s -0 https://julialang.org/downloads/ `# look at the download page` \
+    | grep https://github.com/JuliaLang/julia/releases `# find all links to github releases` \
+    | grep -o "\\d\\.\\d\\.\\d" `# parse out a version number` \
+    | uniq `# display only unique versions`
