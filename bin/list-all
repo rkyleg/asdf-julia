@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 curl -s -0 https://api.github.com/repos/JuliaLang/julia/releases
     | grep tag_name `# find all links to github releases` \
-    | cut -d : -f 2
-    | cut -d : -f 2
+    | cut -d : -f 2 \
+    | cut -d : -f 2 \
     | tr -d '"' | tr -d ,
