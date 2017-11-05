@@ -1,7 +1,7 @@
 language: c
 script: asdf plugin-test julia https://github.com/rkyleg/asdf-julia.git 'julia --version'
 before_script:
-  - git clone https://github.com/asdf-vm/asdf.git asdf --branch v0.2.1
+  - git clone https://github.com/asdf-vm/asdf.git asdf --branch v0.4.0
   - . asdf/asdf.sh
 env:
   - CI_SERVER=yes
