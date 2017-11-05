@@ -6,7 +6,6 @@ install_julia(){
     local install_type=$1
     local version=$2
     local install_path=$3
-
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 
@@ -31,7 +30,7 @@ install_julia(){
             hdiutil mount ./julia.dmg `# mount the dmg`\
             | grep Volume `# find the volume row in the output`\
             | egrep -o '/Volumes[^\n]+' `# store the volume's path`\
-        )
+        );
 
         local source_path=$(find $volume_path -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
             | grep 'Contents/Resources/julia$' `#find the julia directory` \
@@ -46,10 +45,11 @@ install_julia(){
     
     local url=$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
         | grep $version `# find the requested version` \
-        | grep linux/x64 `# get the mac binaries` \
+        | grep linux/x64 `# get the linux binaries` \
         | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" `# parse out the url` \
         | head -1
     );
+    echo $url
     curl $url --create-dirs -so "$tmp_download_dir/julia.tar.gz"        
     local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
