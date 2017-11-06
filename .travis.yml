@@ -6,7 +6,7 @@ before_script:
 env:
   - CI_SERVER=yes
 dist: trusty
-osx_image: xcode8.2
+osx_image: xcode9
 os:
   - linux
   - osx
