@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
-versions=$(curl -s -0 https://api.github.com/repos/JuliaLang/julia/releases \
+versions=($(curl -s -0 https://api.github.com/repos/JuliaLang/julia/releases \
     | grep tag_name \
     | cut -d : -f 2 \
     | tr -d '"' \
     | tr -d , \
     | tr -d v \
-    | tr '\n' ' ')
+    | tr '\n' ' '))
     # | cat -A
-echo "$versions"
+
+length=$(( ${#versions[@]} - 1 ))
+for (( i=length; i >=0; i-- ))
+do
+    echo -n "${versions[i]} "
+done
 # echo ${#versions}
