@@ -44,7 +44,7 @@ install_julia(){
         exit;
     fi
 
-    local url="https://julialang-s3.amazonaws.com/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
+    local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
     
     # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
     #     | grep 0.6.1 `# find the requested version` \
