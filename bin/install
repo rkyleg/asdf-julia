@@ -8,6 +8,7 @@ install_julia(){
     local install_path=$3
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
+    local version_trim=${version%.*}
 
     if [[ "$(uname)" == "Darwin" ]]; then
         # if [[ "$CI_SERVER" = "yes" ]]; then
@@ -17,13 +18,14 @@ install_julia(){
         #     local mountpath="/Volumes/Julia-$version";
         #     local appname="/Julia-$version_trim.app";
         # fi
-
-        local url=$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
-            | grep $version `# find the requested version` \
-            | grep mac64 `# get the mac binaries` \
-            | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp `# parse out the url`
-        ")
-
+# https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.1-mac64.dmg
+# https://julialang-s3.julialang.org/bin/mac/x64/0.5/julia-0.5.2-mac64.dmg
+        # local url=$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
+        #     | grep $version `# find the requested version` \
+        #     | grep mac64 `# get the mac binaries` \
+        #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp `# parse out the url`
+        # ")
+        local url = "https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
 
         local volume_path=$(
