@@ -4,6 +4,7 @@ versions=$(curl -s -0 https://api.github.com/repos/JuliaLang/julia/releases \
     | cut -d : -f 2 \
     | tr -d '"' \
     | tr -d , \
+    | tr -d v \
     | tr '\n' ' ')
     # | cat -A
 echo "$versions"
