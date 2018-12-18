@@ -2,6 +2,8 @@
 
 # https://s3.amazonaws.com/julialang/bin/osx/x64/0.5/julia-0.5.0-osx10.7+.dmg
 
+set -e
+
 install_julia(){
     local install_type=$1
     local version=$2
