@@ -8,7 +8,7 @@ install_julia(){
     local install_path=$3
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    local version_trim=${version%.*}
+    # local version_trim=${version%.*}
 
     if [[ "$(uname)" == "Darwin" ]]; then
         # if [[ "$CI_SERVER" = "yes" ]]; then
@@ -45,7 +45,7 @@ install_julia(){
     fi
 
     local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
-    
+    # local url="https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.1-linux-x86_64.tar.gz"
     # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
     #     | grep 0.6.1 `# find the requested version` \
     #     | grep linux/x64 `# get the linux binaries` \
