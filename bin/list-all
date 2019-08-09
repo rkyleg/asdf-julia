@@ -17,7 +17,7 @@ for (( i=length; i >=0; i-- ))
 do
     if [ ${versions[i]} != "0.0.1" ]
     then
-        echo "${versions[i]} "
+        echo -n "${versions[i]} "
 
     fi
 done
