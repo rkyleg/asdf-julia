@@ -60,6 +60,7 @@ install_julia(){
     local julia_dir=${install_dir%-*}
 
     mv $install_path/$install_dir $install_path/$julia_dir
+    mkdir $install_path/julia
     mv $install_path/$julia_dir/** $install_path/julia
 
     if [[ -z "$CI_SERVER" && "$(uname)" == "Linux" ]]; then
