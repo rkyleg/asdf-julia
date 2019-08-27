@@ -27,7 +27,12 @@ install_julia(){
         #     | grep mac64 `# get the mac binaries` \
         #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp `# parse out the url`
         # ")
-        local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
+        if [[ "$version" == "nightly" || "$version" == "latest" ]]; then
+            local url="https://julialangnightlies-s3.julialang.org/bin/mac/x64/julia-latest-mac64.dmg"
+        else
+            local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
+        fi
+
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
 
         local volume_path=$(
@@ -46,7 +51,11 @@ install_julia(){
         exit;
     fi
 
-    local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
+    if [[ "$version" == "nightly" || "$version" == "latest" ]]; then
+        local url="https://julialangnightlies-s3.julialang.org/bin/linux/x64/julia-latest-linux64.tar.gz"
+    else
+        local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
+    fi
     # local url="https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.1-linux-x86_64.tar.gz"
     # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
     #     | grep 0.6.1 `# find the requested version` \

@@ -25,4 +25,4 @@ do
 
     fi
 done
-# echo ${#versions}
+echo -n latest
