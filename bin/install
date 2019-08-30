@@ -57,14 +57,14 @@ install_julia(){
     curl "$url" --create-dirs -so "$tmp_download_dir/julia.tar.gz"        
     local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
-    local julia_dir=${install_dir%-*}
+    local julia_dir=${install_dir[@]:0:5}
 
     mv $install_path/$install_dir $install_path/$julia_dir
-   if [[ -z $install_path/julia ]]; then
-        mkdir $install_path/julia
-        mv $install_path/$julia_dir/** $install_path/julia
-        rm -r $install_path/$julia_dir
-   fi
+#    if [[ -z $install_path/julia ]]; then
+#         mkdir $install_path/julia
+#         mv $install_path/$julia_dir/** $install_path/julia
+#         rm -r $install_path/$julia_dir
+#    fi
 
     if [[ -z "$CI_SERVER" && "$(uname)" == "Linux" ]]; then
         echo "Do you want to install the desktop entry for Julia (y/n)?"
