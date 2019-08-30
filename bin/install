@@ -58,7 +58,8 @@ install_julia(){
     local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
     local julia_dir=${install_dir[@]:0:5}
-
+    echo $install_path/$install_dir 
+    echo $install_path/$julia_dir
     mv $install_path/$install_dir $install_path/$julia_dir
 #    if [[ -z $install_path/julia ]]; then
 #         mkdir $install_path/julia
