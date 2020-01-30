@@ -46,7 +46,21 @@ install_julia(){
         exit;
     fi
 
-    local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
+    case "$( uname -m )" in
+        "armv7l")
+            local url="https://julialang-s3.julialang.org/bin/linux/armv7l/$version_trim/julia-$version-linux-armv7l.tar.gz"
+            ;;
+        "aarch64")
+            local url="https://julialang-s3.julialang.org/bin/linux/aarch64/$version_trim/julia-$version-linux-aarch64.tar.gz"
+            ;;
+        "i686")
+            local url="https://julialang-s3.julialang.org/bin/linux/x86/$version_trim/julia-$version-linux-i686.tar.gz"
+            ;;
+        "x86_64")
+            local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
+            ;;
+    esac
+    # local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
     # local url="https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.1-linux-x86_64.tar.gz"
     # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
     #     | grep 0.6.1 `# find the requested version` \
