@@ -4,29 +4,14 @@
 
 set -e
 
-install_julia(){
+function install_julia {
     local install_type=$1
     local version=$2
     local install_path=$3
     local version_trim=${version%.*}
     local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    # local version_trim=${version%.*}
 
     if [[ "$(uname)" == "Darwin" ]]; then
-        # if [[ "$CI_SERVER" = "yes" ]]; then
-        #     local mountpath="/Volumes/Julia";
-        #     local appname="Julia.app";
-        # else
-        #     local mountpath="/Volumes/Julia-$version";
-        #     local appname="/Julia-$version_trim.app";
-        # fi
-# https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.1-mac64.dmg
-# https://julialang-s3.julialang.org/bin/mac/x64/0.5/julia-0.5.2-mac64.dmg
-        # local url=$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
-        #     | grep $version `# find the requested version` \
-        #     | grep mac64 `# get the mac binaries` \
-        #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp `# parse out the url`
-        # ")
         local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
         curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
 
@@ -47,29 +32,15 @@ install_julia(){
     fi
 
     local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
-    # local url="https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.1-linux-x86_64.tar.gz"
-    # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
-    #     | grep 0.6.1 `# find the requested version` \
-    #     | grep linux/x64 `# get the linux binaries` \
-    #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" `# parse out the url` \
-    #     | head -1
-    # )"
+
     curl "$url" --create-dirs -so "$tmp_download_dir/julia.tar.gz"
     local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
     local install_dir="$(echo $output_dir | cut -f1 -d"/")"
-    # local julia_dir=${install_dir[@]:0:5}
 
     if [[ -z "$CI_SERVER" ]]; then
         mv $install_path/$install_dir $install_path/julia
     fi
-#    if [[ -z $install_path/julia ]]; then
-#         mkdir $install_path/julia
-#         mv $install_path/$julia_dir/** $install_path/julia
-#         rm -r $install_path/$julia_dir
-#    fi
 
-    # cp -r $tmp_download_dir/julia $ASDF_INSTALL_PATH
     rm -rf $tmp_download_dir
-    # chmod a+x $install_path/$julia_dir
 }
 install_julia $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
