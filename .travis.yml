@@ -1,12 +1,10 @@
 language: c
-script: asdf plugin-test julia https://github.com/rkyleg/asdf-julia.git 'julia --version'
+script: asdf plugin-test julia https://github.com/lassepe/asdf-julia.git 'julia --version'
 before_script:
   - git clone https://github.com/asdf-vm/asdf.git
   - . asdf/asdf.sh
 env:
   - CI_SERVER=yes
-# dist: trusty
-# osx_image: xcode9
 os:
   - linux
   - osx
