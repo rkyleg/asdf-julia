@@ -13,7 +13,7 @@ function install_julia {
 
     if [[ "$(uname)" == "Darwin" ]]; then
         local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
-        curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
+        curl -L $url --create-dirs -so "$tmp_download_dir/julia.dmg"
 
         local volume_path=$(
             hdiutil mount "$tmp_download_dir/julia.dmg" `# mount the dmg`\
