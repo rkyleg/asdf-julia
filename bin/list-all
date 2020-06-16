@@ -14,8 +14,6 @@ fi
 cmd="$cmd $releases_path"
 
 versions=($(eval $cmd | sed -n 's/.*"tag_name": "\(.*\)",/\1/p' | sed 'y/v/ /' | sort_versions))
-    # | cat -A
-echo $versions
 
 length=$(( ${#versions[@]} - 1 ))
 for (( i=length; i >=0; i-- ))
@@ -23,7 +21,5 @@ do
     if [ ${versions[i]} != "0.0.1" ]
     then
         echo -n "${versions[i]} "
-
     fi
 done
-# echo ${#versions}
