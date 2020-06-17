@@ -4,40 +4,86 @@
 
 set -e
 
+function get_url {
+  local version=$1
+  local uname_str=$2
+
+  local version_trim=${version%.*}
+  local uname_str="$(uname)"
+  local arch_long=$(uname -m)
+
+  case "$arch_long" in
+    "armv7l" | "aarch64")
+      local arch_short=$arch_long
+      ;;
+    "i686")
+      local arch_short="x86"
+      ;;
+    "x86_64")
+      local arch_short="x64"
+      ;;
+  esac
+
+  case $uname_str in
+    "Darwin")
+      local os="mac"
+      local version_postfix="mac64"
+      local extension="dmg"
+      ;;
+    *)
+      local os="$(echo $uname_str | tr '[:upper:]' '[:lower:]')"
+      local version_postfix="$os-$arch_long"
+      local extension="tar.gz"
+  esac
+
+  url="https://julialang-s3.julialang.org/bin/$os/$arch_short/$version_trim/julia-$version-$version_postfix.$extension"
+
+  echo $url
+}
+
+function download_binary_archive {
+  local version=$1
+
+  local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
+  local tmp_download_file="$tmp_download_dir/julia.archive"
+  local url="$(get_url $version)"
+
+  curl -L "$url" > "$tmp_download_file"
+
+  echo $tmp_download_file
+}
+
 function install_julia {
     local install_type=$1
     local version=$2
     local install_path=$3
-    local version_trim=${version%.*}
-    local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
 
-    if [[ "$(uname)" == "Darwin" ]]; then
-        local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
-        curl -L $url --create-dirs -so "$tmp_download_dir/julia.dmg"
-
-        local volume_path=$(
-            hdiutil mount "$tmp_download_dir/julia.dmg" `# mount the dmg`\
-            | grep Volume `# find the volume row in the output`\
-            | egrep -o '/Volumes[^\n]+' `# store the volume's path`\
-        )
-
-        local source_path=$(find $volume_path -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
-            | grep 'Contents/Resources/julia$' `#find the julia directory` \
-            | head -n 1
-        )
-
-        cp -R $source_path $install_path
-        hdiutil unmount $volume_path
-        exit;
+    if [ "$install_type" != "version" ]; then
+      echo "Error: install type must be a version!" 1>&2
+      exit 1
     fi
 
-    local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
-    mkdir -p $tmp_download_dir
-    curl -L "$url" > "$tmp_download_dir/julia.tar.gz"
-    local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
-    local install_dir="$(echo $output_dir | cut -f1 -d"/")"
-    mv $install_path/$install_dir $install_path/julia
+    tmp_download_file="$(download_binary_archive $version)"
+    tmp_download_dir="$(dirname $tmp_download_file)"
 
-    rm -rf $tmp_download_dir
+    if [[ "$(uname)" == "Darwin" ]]; then
+      local volume_path=$(
+      hdiutil mount "$tmp_download_file" `# mount the dmg`\
+        | grep Volume `# find the volume row in the output`\
+        | egrep -o '/Volumes[^\n]+' `# store the volume's path`\
+      )
+
+      local source_path=$(find $volume_path -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
+        | grep 'Contents/Resources/julia$' `#find the julia directory` \
+        | head -n 1
+      )
+
+      cp -R $source_path $install_path
+      hdiutil unmount $volume_path
+    else
+      local untar_list="$(tar -xvf "$tmp_download_file" -C $tmp_download_dir)"
+      local untar_dir="$tmp_download_dir/$(echo $untar_list | cut -f1 -d"/" | head -n 1)"
+      mv $untar_dir/* $install_path/
+    fi
 }
 install_julia $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
