@@ -23,3 +23,4 @@ do
         echo -n "${versions[i]} "
     fi
 done
+echo nightly
