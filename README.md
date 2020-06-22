@@ -2,7 +2,7 @@
 
 ![CI](https://github.com/lassepe/asdf-julia/workflows/CI/badge.svg)
 
-Julia plugin for asdf version manager
+A julia plugin for the asdf version manager.
 
 ## Install
 
