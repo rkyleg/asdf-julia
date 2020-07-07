@@ -1,7 +1,7 @@
 # asdf-julia
 
-![CI](https://github.com/lassepe/asdf-julia/workflows/CI/badge.svg)
-
+![Tavis CI](https://github.com/lassepe/asdf-julia/workflows/CI/badge.svg)
+![Github Actions](https://github.com/rkyleg/asdf-julia/workflows/CI/badge.svg)
 A julia plugin for the asdf version manager.
 
 ## Install
