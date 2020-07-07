@@ -1,0 +1,11 @@
+language: c
+script: asdf plugin test julia $TRAVIS_BUILD_DIR --asdf-plugin-gitref $TRAVIS_COMMIT julia --version
+before_script:
+  - git clone https://github.com/asdf-vm/asdf.git
+  - . asdf/asdf.sh
+matrix:
+  include:
+   - os: linux
+     arch: amd64
+   - os: osx
+     arch: amd64
