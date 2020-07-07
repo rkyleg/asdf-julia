@@ -1,6 +1,4 @@
 # asdf-julia
-
-![Tavis CI](https://travis-ci.org/rkyleg/asdf-julia.svg?branch=master)
 ![Github Actions](https://github.com/rkyleg/asdf-julia/workflows/CI/badge.svg)
 A julia plugin for the asdf version manager.
 
