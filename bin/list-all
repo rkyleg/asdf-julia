@@ -5,16 +5,15 @@ function sort_versions() {
     LC_ALL=C sort -gt. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | sort -r - | awk '{print $2}'
 }
 
-cmd="curl -s -0"
+cmd="curl -Ls0"
 releases_path="https://api.github.com/repos/JuliaLang/julia/releases"
 
-if [ -n "$OAUTH_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $OAUTH_TOKEN'"
+if [ -n "$GITHUB_API_TOKEN" ]; then
+  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
 fi
 cmd="$cmd $releases_path"
 
 versions=($(eval $cmd | sed -n 's/.*"tag_name": "\(.*\)",/\1/p' | sed 'y/v/ /' | sort_versions))
-    # | cat -A
 
 length=$(( ${#versions[@]} - 1 ))
 for (( i=length; i >=0; i-- ))
@@ -22,7 +21,6 @@ do
     if [ ${versions[i]} != "0.0.1" ]
     then
         echo -n "${versions[i]} "
-
     fi
 done
-# echo ${#versions}
+echo nightly

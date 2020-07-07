@@ -4,81 +4,150 @@
 
 set -e
 
-install_julia(){
+function get_arch_short {
+  local arch_long=$(uname -m)
+
+  case "$arch_long" in
+    "armv7l" | "aarch64")
+      local arch_short=$arch_long
+      ;;
+    "i686")
+      local arch_short="x86"
+      ;;
+    "x86_64")
+      local arch_short="x64"
+      ;;
+  esac
+
+  echo $arch_short
+}
+
+function get_os {
+  local uname_str="$(uname)"
+
+  case $uname_str in
+    "Darwin")
+      local os="mac"
+      ;;
+    *)
+      local os="$(echo $uname_str | tr '[:upper:]' '[:lower:]')"
+      ;;
+  esac
+
+  echo $os
+}
+
+function get_file_extension {
+
+  case "$(get_os)" in
+    "mac")
+      local extension="dmg"
+      ;;
+    *)
+      local extension="tar.gz"
+      ;;
+  esac
+
+  echo $extension
+}
+
+function get_url_from_version {
+  local version=$1
+
+  local version_trim=${version%.*}
+  local arch_long=$(uname -m)
+  local arch_short=$(get_arch_short)
+  local os=$(get_os)
+  local extension=$(get_file_extension)
+
+  case $os in
+    "mac")
+      local version_postfix="mac64"
+      ;;
+    *)
+      local version_postfix="$os-$arch_long"
+      ;;
+  esac
+
+  echo "https://julialang-s3.julialang.org/bin/$os/$arch_short/$version_trim/julia-$version-$version_postfix.$extension"
+}
+
+function get_url_from_nightly {
+  local os=$(get_os)
+  local arch_short=$(get_arch_short)
+  local extension=$(get_file_extension)
+
+  case "$(get_os)" in
+    "mac")
+      local version_postfix="mac64"
+      ;;
+    "linux")
+      case "$(uname -m)" in
+        "aarch64")
+          local version_postfix="linuxaarch64"
+          ;;
+        "i686")
+          local version_postfix="linux32"
+          ;;
+        "x86_64")
+          local version_postfix="linux64"
+          ;;
+        *)
+          echo "Error: unrecognized os or arch." >&2
+          exit 1
+          ;;
+      esac
+      ;;
+    esac
+
+  echo "https://julialangnightlies-s3.julialang.org/bin/$os/$arch_short/julia-latest-$version_postfix.$extension"
+}
+
+function download_binary_archive {
+  local version=$1
+
+  local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
+  local tmp_download_file="$tmp_download_dir/julia.archive"
+
+  if [[ $version == "nightly" ]]; then
+    local url="$(get_url_from_nightly)"
+  else
+    local url="$(get_url_from_version $version)"
+  fi
+
+  echo "Downloading from:" >&2
+  echo $url >&2
+  curl -L --fail "$url" > "$tmp_download_file"
+
+  echo $tmp_download_file
+}
+
+function install_julia {
     local install_type=$1
     local version=$2
     local install_path=$3
-    local version_trim=${version%.*}
-    local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
-    # local version_trim=${version%.*}
 
-    if [[ "$(uname)" == "Darwin" ]]; then
-        # if [[ "$CI_SERVER" = "yes" ]]; then
-        #     local mountpath="/Volumes/Julia";
-        #     local appname="Julia.app";
-        # else
-        #     local mountpath="/Volumes/Julia-$version";
-        #     local appname="/Julia-$version_trim.app";
-        # fi
-# https://julialang-s3.julialang.org/bin/mac/x64/0.6/julia-0.6.1-mac64.dmg
-# https://julialang-s3.julialang.org/bin/mac/x64/0.5/julia-0.5.2-mac64.dmg
-        # local url=$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
-        #     | grep $version `# find the requested version` \
-        #     | grep mac64 `# get the mac binaries` \
-        #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp `# parse out the url`
-        # ")
-        local url="https://julialang-s3.julialang.org/bin/mac/x64/$version_trim/julia-$version-mac64.dmg"
-        curl $url --create-dirs -so "$tmp_download_dir/julia.dmg"
+    tmp_download_file="$(download_binary_archive $version)"
+    tmp_download_dir="$(dirname $tmp_download_file)"
 
-        local volume_path=$(
-            hdiutil mount "$tmp_download_dir/julia.dmg" `# mount the dmg`\
-            | grep Volume `# find the volume row in the output`\
-            | egrep -o '/Volumes[^\n]+' `# store the volume's path`\
-        )
+    if [ "$(uname)" == "Darwin" ]; then
+      local volume_path=$(
+      hdiutil mount "$tmp_download_file" `# mount the dmg`\
+        | grep Volume `# find the volume row in the output`\
+        | egrep -o '/Volumes[^\n]+' `# store the volume's path`\
+      )
 
-        local source_path=$(find $volume_path -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
-            | grep 'Contents/Resources/julia$' `#find the julia directory` \
-            | head -n 1
-        )
+      local source_path=$(find $volume_path -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
+        | grep 'Contents/Resources/julia$' `#find the julia directory` \
+        | head -n 1
+      )
 
-        cp -R $source_path $install_path
-        hdiutil unmount $volume_path
-        exit;
+      cp -R $source_path $install_path
+      hdiutil unmount $volume_path
+    else
+      local untar_list="$(tar -xvf "$tmp_download_file" -C $tmp_download_dir)"
+      local untar_dir="$tmp_download_dir/$(echo $untar_list | cut -f1 -d"/" | head -n 1)"
+      mv $untar_dir/* $install_path/
     fi
-
-    local url="https://julialang-s3.julialang.org/bin/linux/x64/$version_trim/julia-$version-linux-x86_64.tar.gz"
-    # local url="https://julialang-s3.julialang.org/bin/linux/x64/1.0/julia-1.0.1-linux-x86_64.tar.gz"
-    # local url="$(curl -s -0 https://julialang.org/downloads/ `# look at the logins page` \
-    #     | grep 0.6.1 `# find the requested version` \
-    #     | grep linux/x64 `# get the linux binaries` \
-    #     | sed -n "/href/ s/.*href=['\"]\([^'\"]*\)['\"].*/\1/gp" `# parse out the url` \
-    #     | head -1
-    # )"
-    curl "$url" --create-dirs -so "$tmp_download_dir/julia.tar.gz"        
-    local output_dir="$(tar -xvf "$tmp_download_dir/julia.tar.gz" -C "$install_path")"
-    local install_dir="$(echo $output_dir | cut -f1 -d"/")"
-    # local julia_dir=${install_dir[@]:0:5}
-
-    if [[ -z "$CI_SERVER" ]]; then
-        mv $install_path/$install_dir $install_path/julia
-    fi
-#    if [[ -z $install_path/julia ]]; then
-#         mkdir $install_path/julia
-#         mv $install_path/$julia_dir/** $install_path/julia
-#         rm -r $install_path/$julia_dir
-#    fi
-
-    if [[ -z "$CI_SERVER" && "$(uname)" == "Linux" ]]; then
-        echo "Do you want to install the desktop entry for Julia (y/n)?"
-        read installdesktop
-        if [ ${installdesktop} == "y" ]; then
-            cp $install_path/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop
-        fi
-        # cp $ASDF_INSTALL_PATH/$julia_dir/share/applications/julia.desktop $HOME/.local/share/applications/julia.desktop;
-    fi
-
-    # cp -r $tmp_download_dir/julia $ASDF_INSTALL_PATH
-    rm -rf $tmp_download_dir
-    # chmod a+x $install_path/$julia_dir
 }
 install_julia $ASDF_INSTALL_TYPE $ASDF_INSTALL_VERSION $ASDF_INSTALL_PATH
