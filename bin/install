@@ -142,7 +142,7 @@ function install_julia {
         | head -n 1
       )
 
-      cp -R "$source_path/*" $install_path/
+      cp -R $source_path/* $install_path/
       hdiutil unmount "$volume_path"
     else
       local untar_list="$(tar -xvf "$tmp_download_file" -C $tmp_download_dir)"
