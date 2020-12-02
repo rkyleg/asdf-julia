@@ -19,3 +19,9 @@ On OSX:
 The script pulls down the app package from the Julia website, but does not install
 as a native app. Instead, it copies the julia directory from the Resources folder
 inside the app package, thus providing the binary to asdf.
+
+### Acknowledgments
+- [lasspe](https://github.com/lassepe)
+- [hickey](https://github.com/hickey)
+- [misnyo-ci](https://github.com/misnyo-ci)
+- [sheeldotme](https://github.com/sheeldotme)
