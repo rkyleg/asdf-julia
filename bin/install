@@ -138,11 +138,11 @@ function install_julia {
       )
 
       local source_path=$(find "$volume_path" -type d -print 2> /dev/null `# find all directories in the new volume, redirect the errors so they don't interfere with the grep` \
-        | grep 'Contents/Resources/julia$' `#find the julia directory` \
+        | grep 'Contents/Resources/julia' `#find the julia directory` \
         | head -n 1
       )
 
-      cp -R "$source_path/" $install_path
+      cp -R $source_path/* $install_path/
       hdiutil unmount "$volume_path"
     else
       local untar_list="$(tar -xvf "$tmp_download_file" -C $tmp_download_dir)"
