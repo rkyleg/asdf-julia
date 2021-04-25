@@ -25,3 +25,4 @@ inside the app package, thus providing the binary to asdf.
 - [hickey](https://github.com/hickey)
 - [misnyo-ci](https://github.com/misnyo-ci)
 - [sheeldotme](https://github.com/sheeldotme)
+- [kimriouxparadis](https://github.com/kimriouxparadis)
