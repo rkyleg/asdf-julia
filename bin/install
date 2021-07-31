@@ -106,7 +106,7 @@ function get_url_from_nightly {
 function download_binary_archive {
   local version=$1
 
-  local tmp_download_dir="$(mktemp -d -t asdf-julia.XXX)"
+  local tmp_download_dir="$(mktemp -d -t asdf-julia.XXXXXX)"
   local tmp_download_file="$tmp_download_dir/julia.archive"
 
   if [[ $version == "nightly" ]]; then
