@@ -28,4 +28,3 @@ inside the app package, thus providing the binary to asdf.
 - [kimriouxparadis](https://github.com/kimriouxparadis)
 - [dhanak](https://github.com/dhanak)
 - [christopher-dG](https://github.com/christopher-dG)
-- [kimriouxparadis](https://github.com/kimriouxparadis)
