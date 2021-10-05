@@ -26,3 +26,6 @@ inside the app package, thus providing the binary to asdf.
 - [misnyo-ci](https://github.com/misnyo-ci)
 - [sheeldotme](https://github.com/sheeldotme)
 - [kimriouxparadis](https://github.com/kimriouxparadis)
+- [dhanak](https://github.com/dhanak)
+- [christopher-dG](https://github.com/christopher-dG)
+- [kimriouxparadis](https://github.com/kimriouxparadis)
