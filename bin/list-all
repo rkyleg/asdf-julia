@@ -5,15 +5,23 @@ function sort_versions() {
     LC_ALL=C sort -gt. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | sort -r - | awk '{print $2}'
 }
 
-cmd="curl -Ls0"
-releases_path="https://api.github.com/repos/JuliaLang/julia/releases"
+releases=$(tempfile -s .json)
+headers=$(tempfile)
+
+cmd="curl -Ls0 -D$headers"
+releases_path="https://api.github.com/repos/JuliaLang/julia/releases?page="
+page=0
 
 if [ -n "$GITHUB_API_TOKEN" ]; then
-  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN'"
+  cmd="$cmd -H 'Authorization: token $GITHUB_API_TOKEN' $releases_path"
 fi
 cmd="$cmd $releases_path"
 
-versions=($(eval $cmd | sed -n 's/.*"tag_name": "\(.*\)",/\1/p' | sed 'y/v/ /' | sort_versions))
+while (( ++page == 1 )) || grep -q 'rel="next"' $headers; do
+    eval $cmd$page >> $releases
+done
+
+versions=($(sed -n 's/.*"tag_name": "\(.*\)",/\1/p' $releases | sed 'y/v/ /' | sort_versions))
 
 length=$(( ${#versions[@]} - 1 ))
 for (( i=length; i >=0; i-- ))
@@ -24,3 +32,6 @@ do
     fi
 done
 echo nightly
+
+rm -f $releases
+rm -f $headers
