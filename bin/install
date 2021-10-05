@@ -4,7 +4,11 @@
 
 set -e
 
+# 1.7.0-beta3 is the first version to include a native ARM64 Mac package.
+MIN_MAC_ARM_VERSION="1.7.0-beta3"
+
 function get_arch_short {
+  local version="$1"
   local arch_long=$(uname -m)
 
   case "$arch_long" in
@@ -14,12 +18,76 @@ function get_arch_short {
     "i686")
       local arch_short="x86"
       ;;
-    "x86_64" | "arm64")
+    "x86_64")
       local arch_short="x64"
+      ;;
+    "arm64")
+      if [ "$(get_os)" = "mac" ] && is_minimum_version "$MIN_MAC_ARM_VERSION" "$version"; then
+        local arch_short="aarch64"
+      else
+        local arch_short="x64"
+      fi
       ;;
   esac
 
   echo $arch_short
+}
+
+is_minimum_version() {
+  local minimum="$1"
+  local compare="$2"
+
+  # Check the numbered components in descending order.
+  for i in $(seq 3); do
+    local min="$(echo $minimum | cut -d. -f$i | cut -d- -f1)"
+    local cmp="$(echo $compare | cut -d. -f$i | cut -d- -f1)"
+    [ "$cmp" -gt "$min" ] && return 0
+    [ "$min" -gt "$cmp" ] && return 1
+  done
+
+  # Check the prerelease version.
+  # How prereleases work:
+  # 1. For versions A=X-PRE and B=X, A < B for any PRE.
+  # 2. A prerelease with no number is considered to be the first of its type.
+  # 3. The order of prerelease types from oldest to newest is alpha, beta, rc.
+  # Examples:
+  # - 1.2.3 > 1.2.3-beta3
+  # - 1.2.3 > 1.2.3-beta3
+  # - 1.2.3-rc1 > 1.2.3-beta1
+  # - 1.2.3-rc1 > 1.2.3-rc
+
+  local minimum_prerelease="$(echo $minimum | grep - | cut -d- -f2)"
+  local compare_prerelease="$(echo $compare | grep - | cut -d- -f2)"
+
+  # 1: No matter what the minimum prerelease is, it's not newer than no prerelease.
+  [ -z "$compare_prerelease" ] && return 0
+  # 1: Since the compare prerelease is set to something, it's older than no prerelease.
+  [ -z "$minimum_prerelease" ] && return 1
+
+  local minimum_prerelease_type="$(echo $minimum_prerelease | egrep -o '\D+')"
+  local compare_prerelease_type="$(echo $compare_prerelease | egrep -o '\D+')"
+  local minimum_prerelease_num="$(echo $minimum_prerelease | egrep -o '\d+')"
+  local compare_prerelease_num="$(echo $compare_prerelease | egrep -o '\d+')"
+
+  if [ "$minimum_prerelease_type" = "$compare_prerelease_type" ]; then
+    # 2: The minimum prerelease is the first of its type.
+    [ -z "$minimum_prerelease_num" ] && return 0
+    # 2: The minimum prerelease number is numbered and the compare is not.
+    [ -z "$compare_prerelease_num" ] && return 1
+    [ "$compare_prerelease_num" -ge "$minimum_prerelease_num" ] && return 0 || return 1
+  elif [ "$compare_prerelease_type" = "rc" ]; then
+    # 3: Minimum is older than an rc.
+    return 0
+  elif [ "$minimum_prerelease_type" = "rc" ]; then
+    # 3: Compare is older than an rc.
+    return 1
+  elif [ "$compare_prerelease_type" = "beta" ]; then
+    return 0
+  elif [ "$minimum_prerelease_type" = "beta" ]; then
+    return 1
+  else
+    return 1
+  fi
 }
 
 function get_os {
@@ -56,13 +124,18 @@ function get_url_from_version {
 
   local version_trim=${version%.*}
   local arch_long=$(uname -m)
-  local arch_short=$(get_arch_short)
+  local arch_short=$(get_arch_short "$version")
   local os=$(get_os)
   local extension=$(get_file_extension)
 
   case $os in
     "mac")
-      local version_postfix="mac64"
+      echo "$version" 1>&2
+      if [ "$arch_long" = "arm64" ] && is_minimum_version "$MIN_MAC_ARM_VERSION" "$version"; then
+        local version_postfix="macaarch64"
+      else
+        local version_postfix="mac64"
+      fi
       ;;
     *)
       local version_postfix="$os-$arch_long"
