@@ -5,7 +5,7 @@ function sort_versions() {
     LC_ALL=C sort -gt. -k 1,1 -k 2,2n -k 3,3n -k 4,4n -k 5,5n | sort -r - | awk '{print $2}'
 }
 
-releases=$(mktemp --suffix=.json)
+releases=$(mktemp)
 headers=$(mktemp)
 
 cmd="curl -Ls0 -D$headers"
