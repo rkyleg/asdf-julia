@@ -28,3 +28,7 @@ inside the app package, thus providing the binary to asdf.
 - [kimriouxparadis](https://github.com/kimriouxparadis)
 - [dhanak](https://github.com/dhanak)
 - [christopher-dG](https://github.com/christopher-dG)
+- [spellcard199](https://github.com/spellcard199)
+- [DimitarVanguelov](https://github.com/DimitarVanguelov)
+- [razvanazamfirei](https://github.com/razvanazamfirei)
+- [mehalter](https://github.com/mehalter)
