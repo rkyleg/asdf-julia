@@ -47,6 +47,9 @@ function get_arch_short {
 }
 
 is_minimum_version() {
+  local minimum="$1"
+  local compare="$2"
+
   # Check the numbered components in descending order.
   for i in $(seq 3); do
     local min="$(echo $minimum | cut -d. -f$i | cut -d- -f1)"
