@@ -204,8 +204,6 @@ function download_binary_archive {
 
   if [[ $version == "nightly" ]]; then
     local url="$(get_url_from_nightly)"
-
-
   else
 
     local url="$(get_url_from_version $version)"
