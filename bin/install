@@ -23,7 +23,6 @@ function get_arch_short {
       ;;
     "arm64")
       if [ "$(get_os)" = "mac" ]; then
-
         if [ "$version" = "nightly" ]; then
         #   # For Julia nightly, we know that native binaries for ARM64 Mac will be available.
         #   # So, for Julia nightly, there is no need to perform the `is_minimum_version` check.
