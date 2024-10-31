@@ -22,10 +22,25 @@ function get_arch_short {
       local arch_short="x64"
       ;;
     "arm64")
-      if [ "$(get_os)" = "mac" ] && is_minimum_version "$MIN_MAC_ARM_VERSION" "$version"; then
+      if [ "$(get_os)" = "mac" ]; then
+
+        if [ "$version" = "nightly" ]; then
+        #   # For Julia nightly, we know that native binaries for ARM64 Mac will be available.
+        #   # So, for Julia nightly, there is no need to perform the `is_minimum_version` check.
+          local arch_short="aarch64"
+        else
+          # If the version is not Julia nightly, then we do need to perform the `is_minimum_version`
+          # check.
+          if is_minimum_version "$MIN_MAC_ARM_VERSION" "$version"; then
+            local arch_short="aarch64"
+          else
+            local arch_short="x64"
+          fi
+        fi
         local arch_short="aarch64"
       else
-        local arch_short="x64"
+        # For non-Mac, we just always set `arch_short` to `aarch64`.
+        local arch_short="aarch64"
       fi
       ;;
   esac
@@ -34,9 +49,6 @@ function get_arch_short {
 }
 
 is_minimum_version() {
-  local minimum="$1"
-  local compare="$2"
-
   # Check the numbered components in descending order.
   for i in $(seq 3); do
     local min="$(echo $minimum | cut -d. -f$i | cut -d- -f1)"
@@ -147,12 +159,21 @@ function get_url_from_version {
 
 function get_url_from_nightly {
   local os=$(get_os)
-  local arch_short=$(get_arch_short)
+  local arch_short=$(get_arch_short "$version")
   local extension=$(get_file_extension)
+
+
 
   case "$(get_os)" in
     "mac")
       local version_postfix="mac64"
+      # For Julia nightly, we know that native binaries for ARM64 Mac will be available.
+      # So, for Julia nightly, there is no need to perform the `is_minimum_version` check.
+      if [ "$(uname -m)" = "arm64" ]; then
+        local version_postfix="macaarch64"
+      else
+        local version_postfix="mac64"
+      fi
       ;;
     "linux")
       case "$(uname -m)" in
@@ -184,7 +205,10 @@ function download_binary_archive {
 
   if [[ $version == "nightly" ]]; then
     local url="$(get_url_from_nightly)"
+
+
   else
+
     local url="$(get_url_from_version $version)"
   fi
 
@@ -193,6 +217,7 @@ function download_binary_archive {
   curl -L --fail "$url" > "$tmp_download_file"
 
   echo $tmp_download_file
+
 }
 
 function install_julia {
