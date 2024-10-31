@@ -38,8 +38,7 @@ function get_arch_short {
         fi
         local arch_short="aarch64"
       else
-        # For non-Mac, we just always set `arch_short` to `aarch64`.
-        local arch_short="aarch64"
+        local arch_short="x64"
       fi
       ;;
   esac
