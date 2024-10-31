@@ -163,8 +163,6 @@ function get_url_from_nightly {
   local arch_short=$(get_arch_short "$version")
   local extension=$(get_file_extension)
 
-
-
   case "$(get_os)" in
     "mac")
       local version_postfix="mac64"
