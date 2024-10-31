@@ -216,7 +216,6 @@ function download_binary_archive {
   curl -L --fail "$url" > "$tmp_download_file"
 
   echo $tmp_download_file
-
 }
 
 function install_julia {
