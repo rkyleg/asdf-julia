@@ -160,7 +160,7 @@ function get_url_from_version {
 
 function get_url_from_nightly {
   local os=$(get_os)
-  local arch_short=$(get_arch_short "$version")
+  local arch_short=$(get_arch_short)
   local extension=$(get_file_extension)
 
   case "$(get_os)" in
