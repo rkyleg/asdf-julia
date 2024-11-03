@@ -165,7 +165,6 @@ function get_url_from_nightly {
 
   case "$(get_os)" in
     "mac")
-      local version_postfix="mac64"
       # For Julia nightly, we know that native binaries for ARM64 Mac will be available.
       # So, for Julia nightly, there is no need to perform the `is_minimum_version` check.
       if [ "$(uname -m)" = "arm64" ]; then
