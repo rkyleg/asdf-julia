@@ -32,3 +32,4 @@ inside the app package, thus providing the binary to asdf.
 - [DimitarVanguelov](https://github.com/DimitarVanguelov)
 - [razvanazamfirei](https://github.com/razvanazamfirei)
 - [mehalter](https://github.com/mehalter)
+- [DilumAluthge](https://github.com/DilumAluthge)
