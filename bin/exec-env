@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# vars figured out from this doc
+# https://julia-doc.readthedocs.io/en/latest/manual/embedding/
+if [ "${JULIA_DIR:-}" = "" ]; then
+  export JULIA_DIR="$ASDF_INSTALL_PATH"
+fi
+
+if [ "${JULIA_HOME:-}" = "" ]; then
+  export JULIA_HOME="$JULIA_DIR/bin"
+fi
